@@ -9,7 +9,7 @@ One semester. One project you choose in week one and finish in week fourteen. Ev
 ```
 $ fcpl-lab --how-am-i-graded
 ✓ Each lab is worth up to 10 points, plus 2 for the stretch task.
-✓ Finished after the lab? It counts as late, for up to [TBD].
+✓ Finished after the lab? It counts as late, for up to 8.
 ✓ Missed one? Recover it in the last two sessions for up to 8, with at most 4 recoveries.
 ✓ 90 points is a 10. 45 points passes.
 ✓ Showing up without working code is worth about 2.
@@ -70,7 +70,7 @@ You run the tests yourself, first. That's the deal: I never spend your lab time 
 
 ## Late work
 
-The exercises are meant to be finished **during the lab**. Work you complete after the lab counts as **late** and is worth up to **[TBD]** points.
+The exercises are meant to be finished **during the lab**. Work you complete after the lab counts as **late** and is worth up to **8** points, with no stretch bonus. Late work doesn't use up one of your 4 recoveries.
 
 You don't have to argue about this, and neither do I: your GitHub run timestamps decide it. If your tests were green before the lab ended, the lab counts in full, even if I only get to check it at the next session.
 
@@ -81,7 +81,7 @@ You don't have to argue about this, and neither do I: your GitHub run timestamps
 Life happens. Missing a lab is a setback, not a disaster.
 
 - Do the work in your own time and push it.
-- Recover it in the **recovery weeks: sessions 13 and 14**. Tests green, one change, two questions, same as always. [Pace to confirm: up to 2 labs per recovery session.]
+- Recover it in the **recovery weeks: sessions 13 and 14**. Tests green, one change, two questions, same as always. **At most 2 labs per recovery session**, so up to 2 in S13 and 2 in S14.
 - A recovered lab is worth up to **8 points** instead of 10, and the stretch bonus isn't available.
 - You can recover up to **4 labs**. The final deadline is session 14.
 
