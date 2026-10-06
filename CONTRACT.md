@@ -1,6 +1,6 @@
 # FCPL lab — the contract
 
-**14 sessions · C# 14 on .NET 10**
+**14 sessions · C# on .NET 9 (or 10)**
 
 The FCPL lab runs as **SharpQuest**, the quest to learn C#. Where you see that name, it means this lab.
 
@@ -73,6 +73,8 @@ You run the tests yourself, first. That's the deal: I never spend your lab time 
 The exercises are meant to be finished **during the lab**. Work you complete after the lab counts as **late** and is worth up to **8** points, with no stretch bonus. Late work doesn't use up one of your 4 recoveries.
 
 You don't have to argue about this, and neither do I: your GitHub run timestamps decide it. If your tests were green before the lab ended, the lab counts in full, even if I only get to check it at the next session.
+
+Late work is checked at the start of one of the next labs, when there's time. Be ready to show it when I ask; the timestamp, not the day I check it, decides what it's worth.
 
 ---
 
@@ -154,7 +156,7 @@ Eleven graded labs. 110 points on the table before stretch bonuses, and 90 of th
 
 ## What you need
 
-- **.NET.** The course uses **.NET 10**. For session 1, **.NET 8 or newer** is enough. We'll get it working in the lab, on the lab machines, your laptop, or both. See [SETUP.md](SETUP.md), and don't fight it alone for more than a few minutes.
+- **.NET.** The course builds for **.NET 9**, which the lab PCs have. On your laptop, **.NET 9 or .NET 10** both work. We'll get it working in the lab, on the lab machines, your laptop, or both. See [SETUP.md](SETUP.md) and [DOTNET-9.md](DOTNET-9.md), and don't fight it alone for more than a few minutes.
 - **An editor:** Visual Studio, Rider, or VS Code with the C# Dev Kit. All three are supported. If something only works on one of them, that's my bug, so tell me.
 - **A GitHub account.** Your repository is created from the course template in session 1. Private is fine. Commit as you go.
 - From session 2, your repository has a `global.json` so that everyone in the room is on the same SDK. Please don't delete it.
@@ -165,9 +167,9 @@ Eleven graded labs. 110 points on the table before stretch bonuses, and 90 of th
 
 Every two labs there's a short feedback form. It takes two minutes and asks concrete things: what took you longest, what you had to ask about, what you didn't finish. Your running total on the scoreboard updates when you submit it.
 
-The scoreboard is public but anonymous. In session 1 you claim an [avatar](AVATARS.md), one of fifteen animals in one of twelve colours, and that's your identity on it for the rest of the semester. You'll know you're the Blue Fox; nobody else will unless you tell them. You'll be able to see where you stand at any point in the semester, which is the thing last year's students most wanted and least had.
+The scoreboard is public but anonymous. In session 1 you claim an [avatar](AVATARS.md), one of fifteen animals in one of twelve colours, and that's your identity on it for the rest of the semester. You'll know you're the Blue Fox; nobody else will unless you tell them. You can see where you stand at any point in the semester.
 
-I read every response, and I change things because of them. This document exists because last year's cohort said, clearly and repeatedly, that they wanted to know how they were being graded.
+I read every response, and I change things because of them. And you should know from the first day exactly how you're graded: that's what this document is for.
 
 ---
 

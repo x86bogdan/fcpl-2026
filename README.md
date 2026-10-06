@@ -10,8 +10,9 @@ One semester. One project you choose in session 1 and build, one layer per lab, 
 | [themes/](themes/README.md) | The project catalogue: 21 themes to choose from |
 | [placement/](placement/README.md) | The session-1 placement task. Not graded. |
 | [SETUP.md](SETUP.md) | Getting .NET and a GitHub account ready |
+| [DOTNET-9.md](DOTNET-9.md) | **Made your repository in session 1?** Read this before session 2: making it build on the lab PCs' .NET 9 |
 | [AVATARS.md](AVATARS.md) | The animals and colours for your scoreboard name |
-| [LAB-PC.md](LAB-PC.md) | Working safely on a shared lab PC |
+| [LAB-PC.md](LAB-PC.md) | **Working on a lab PC**: Rider's terminal, no git, uploading your work through the browser, and cleaning up |
 
 ## Get the files
 

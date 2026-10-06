@@ -3,7 +3,7 @@
 **Two things to have before session 1.** Both are quick, and doing them at home saves the slowest twenty minutes of the evening.
 
 1. **A GitHub account.** See Part 2. Three minutes.
-2. **The .NET SDK.** The course uses **.NET 10**. Session 1 works on **.NET 8 or newer**.
+2. **The .NET SDK, version 9 or 10.** The lab PCs have **.NET 9**, and the course builds everything for .NET 9, which a .NET 10 SDK builds just as well. Installing fresh? Take **.NET 10**. Already have 9? Keep it. (Session 1 also works on 8; the labs from session 2 need 9 or newer.)
 
 ---
 
@@ -15,7 +15,7 @@
 dotnet --version
 ```
 
-and see a number starting with `10.` (or `8.` or `9.`, which is fine for session 1).
+and see a number starting with `9.` or `10.`
 
 That's it. Everything else we do in the lab.
 
