@@ -37,6 +37,8 @@
 >
 > then `sh sq.sh test`. The upload at the end saves the fix in your repository, so your next ZIP won't need it. More in [DOTNET-9.md](DOTNET-9.md).
 
+> **`sq` stops with *"The provided file path does not exist: tools/sq"*?** Your repository has no `tools/` folder. Run the same one-line fix above, then upload (the upload includes `tools/`). From session 3 on, `sq` puts that folder back by itself if it's ever missing.
+
 ### While you work
 
 Edit in Rider. Run `sh sq.sh test` as often as you like.
@@ -54,7 +56,7 @@ Edit in Rider. Run `sh sq.sh test` as often as you like.
 2. In the browser: your repository's main page → **Add file → Upload files**.
 3. In the folder that opened, select everything (**Ctrl+A**) and drag it onto the GitHub page. Wait until the file list appears.
 4. Type a message (e.g. *Lab 02*), keep **Commit directly to the main branch**, then **Commit changes**.
-5. Open the **Actions** tab. A run starts within a minute; a green ✓ is your result, recorded. That's where your Contract score comes from.
+5. Open the **Actions** tab. A run starts within a minute; a green ✓ is your result, recorded. That's where your Contract score comes from. **Green by Friday 23:59** of the lab's week counts as on time, for both groups: you can finish at home and upload again.
 6. Clean up: delete the extracted folder and the ZIP, sign out, close the private window.
 
 **Good to know:**

@@ -29,7 +29,7 @@ Each folder has two files:
 | 18 | [Airline Flight Board](18-flight-board/CARD.md) | One airport, one day, and what a delay does next | your own, OpenSky | no |
 | 19 | [University Course Planner](19-course-planner/CARD.md) | Your own degree, with clashes and missing prerequisites found | your faculty's | — |
 | 20 | [Slot Machine Arcade](20-slot-machine/CARD.md) | Reels, bets, payouts, and the statistics of who really wins | simulated | — |
-| 21 | [Build a Game](21-build-a-game/CARD.md) | A game of your choice, as long as it runs on data | your own design | — |
+| 21 | [Build a Game](21-build-a-game/CARD.md) | A game of your choice, as long as it runs on data: plain C#, or Unity on the game track | your own design | — |
 
 **"Your own"** means you write the data yourself (a JSON file you make once), optionally topped up from the API named.
 **API keys** go in an environment variable, never in your code. The labs and the tests run from saved JSON, so a missing key never breaks your build.

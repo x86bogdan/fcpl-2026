@@ -9,7 +9,7 @@ One semester. One project you choose in week one and finish in week fourteen. Ev
 ```
 $ fcpl-lab --how-am-i-graded
 ✓ Each lab is worth up to 10 points, plus 2 for the stretch task.
-✓ Finished after the lab? It counts as late, for up to 8.
+✓ Green after Friday 23:59 of the lab's week? Late, for up to 8.
 ✓ Missed one? Recover it in the last two sessions for up to 8, with at most 4 recoveries.
 ✓ 90 points is a 10. 45 points passes.
 ✓ Showing up without working code is worth about 2.
@@ -70,9 +70,9 @@ You run the tests yourself, first. That's the deal: I never spend your lab time 
 
 ## Late work
 
-The exercises are meant to be finished **during the lab**. Work you complete after the lab counts as **late** and is worth up to **8** points, with no stretch bonus. Late work doesn't use up one of your 4 recoveries.
+The exercises are meant to be finished **in the lab**, and most of the work happens there. But the lab runs in two groups on different days, so the deadline is the same for everyone: **Friday 23:59 of the lab's week**. Work that's green on GitHub by then counts in full, whichever group you're in. Work that goes green after that counts as **late** and is worth up to **8** points, with no stretch bonus. Late work doesn't use up one of your 4 recoveries.
 
-You don't have to argue about this, and neither do I: your GitHub run timestamps decide it. If your tests were green before the lab ended, the lab counts in full, even if I only get to check it at the next session.
+You don't have to argue about this, and neither do I: your GitHub run timestamps decide it. If your tests were green by Friday 23:59, the lab counts in full, even if I only get to check it at the next session. The reference solution for a lab is published after that deadline, never before.
 
 Late work is checked at the start of one of the next labs, when there's time. Be ready to show it when I ask; the timestamp, not the day I check it, decides what it's worth.
 
@@ -165,7 +165,7 @@ Eleven graded labs. 110 points on the table before stretch bonuses, and 90 of th
 
 ## Feedback, and the scoreboard
 
-Every two labs there's a short feedback form. It takes two minutes and asks concrete things: what took you longest, what you had to ask about, what you didn't finish. Your running total on the scoreboard updates when you submit it.
+At every checkpoint, once every three labs, there's a short feedback form. It's anonymous: no name, no avatar, no login. It takes about three minutes and asks concrete things: what took you longest, what you had to ask about, what you didn't finish. The link is on the screen at the end of the session and on the campus page.
 
 The scoreboard is public but anonymous. In session 1 you claim an [avatar](AVATARS.md), one of fifteen animals in one of twelve colours, and that's your identity on it for the rest of the semester. You'll know you're the Blue Fox; nobody else will unless you tell them. You can see where you stand at any point in the semester.
 

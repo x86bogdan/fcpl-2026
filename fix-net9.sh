@@ -65,4 +65,6 @@ done
 
 echo
 echo "Done. Now run:  sh sq.sh test"
-echo "Then save it to GitHub: git commit and push, or, without git, sh sq.sh upload (it says what to do)."
+echo "Then save it to GitHub, tools/ included:"
+echo "  with git:    git add -A && git commit -m \"Course files for .NET 9\" && git push"
+echo "  without git: sh sq.sh upload (it says what to do)"

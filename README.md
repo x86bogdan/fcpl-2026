@@ -12,6 +12,7 @@ One semester. One project you choose in session 1 and build, one layer per lab, 
 | [SETUP.md](SETUP.md) | Getting .NET and a GitHub account ready |
 | [DOTNET-9.md](DOTNET-9.md) | **Made your repository in session 1?** Read this before session 2: making it build on the lab PCs' .NET 9 |
 | [AVATARS.md](AVATARS.md) | The animals and colours for your scoreboard name |
+| [PROJECT-ROUTE.md](PROJECT-ROUTE.md) | **On the project route?** The four checkpoints, what must be ready by session 6, and the forms in [checkpoints/](checkpoints/) |
 | [LAB-PC.md](LAB-PC.md) | **Working on a lab PC**: Rider's terminal, no git, uploading your work through the browser, and cleaning up |
 
 ## Get the files

@@ -56,7 +56,7 @@ else {
             }
             Write-Host ''
             Write-Host 'Done. Now run:  .\sq test' -ForegroundColor Green
-            Write-Host 'Then commit these files along with your own work.'
+            Write-Host 'Then save it to GitHub, tools/ included:  git add -A; git commit -m "Course files for .NET 9"; git push'
         }
         finally {
             Remove-Item $temp -Recurse -Force -ErrorAction SilentlyContinue
