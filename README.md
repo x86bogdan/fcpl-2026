@@ -13,6 +13,7 @@ One semester. One project you choose in session 1 and build, one layer per lab, 
 | [DOTNET-9.md](DOTNET-9.md) | **Made your repository in session 1?** Read this before session 2: making it build on the lab PCs' .NET 9 |
 | [AVATARS.md](AVATARS.md) | The animals and colours for your scoreboard name |
 | [PROJECT-ROUTE.md](PROJECT-ROUTE.md) | **On the project route?** The four checkpoints, what must be ready by session 6, and the forms in [checkpoints/](checkpoints/) |
+| [C# phrasebook](https://x86bogdan.github.io/fcpl-2026/cheatsheet/) | **C# next to Java and C++**, lab by lab: the syntax, the Java habits that mislead you, and the compiler errors you'll meet. Search with the Java word you already know |
 | [LAB-PC.md](LAB-PC.md) | **Working on a lab PC**: Rider's terminal, no git, uploading your work through the browser, and cleaning up |
 
 ## Get the files
