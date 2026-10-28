@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FCPL lab routine</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="How every FCPL lab runs: start, the briefing, the huddles, the help and verification lists, joining late, and claiming an avatar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235B3FD1'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='15' font-weight='700' fill='white' text-anchor='middle'%3EC%23%3C/text%3E%3C/svg%3E">
+<style>
+/* Layout: one reading column; a "this week" card on top, then the lab in the order it happens.
+   Same palette and faces as the C# phrasebook, so the course pages read as one set. */
+:root {
+  --paper: #F4F5F9;
+  --surface: #FFFFFF;
+  --ink: #1C1A2B;
+  --ink-2: #57556C;
+  --rule: #DCDDE7;
+  --cs: #5B3FD1;
+  --cs-soft: rgba(91, 63, 209, .10);
+  --board: #FBFBF7;
+  --marker-help: #B4312B;
+  --marker-verify: #2F7D4F;
+  --marker-late: #2E6A96;
+  --taken: #4A4860;
+  --taken-ink: #FFFFFF;
+  --code-bg: #FBFBFE;
+  --ff-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ff-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14131D; --surface: #1C1B28; --ink: #ECEBF5; --ink-2: #A4A2B9; --rule: #33314A;
+    --cs: #A898FF; --cs-soft: rgba(168, 152, 255, .14); --board: #1F1E2C;
+    --marker-help: #F2837B; --marker-verify: #74D19E; --marker-late: #7DB7E4;
+    --taken: #5A586F; --taken-ink: #FFFFFF; --code-bg: #181724;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #14131D; --surface: #1C1B28; --ink: #ECEBF5; --ink-2: #A4A2B9; --rule: #33314A;
+  --cs: #A898FF; --cs-soft: rgba(168, 152, 255, .14); --board: #1F1E2C;
+  --marker-help: #F2837B; --marker-verify: #74D19E; --marker-late: #7DB7E4;
+  --taken: #5A586F; --taken-ink: #FFFFFF; --code-bg: #181724;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 1rem; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1.0625rem/1.6 var(--ff-body);
+}
+code, pre, kbd { font-family: var(--ff-mono); font-size: .9em; }
+a { color: var(--cs); text-underline-offset: .15em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--cs); outline-offset: 2px; border-radius: 4px; }
+
+.wrap {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 2.25rem 3rem;
+  display: grid;
+  gap: 2.75rem;
+}
+
+/* ---------- header ---------- */
+header { display: grid; gap: .6rem; }
+.eyebrow { margin: 0; font: 600 .78rem/1 var(--ff-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+h1 { margin: 0; font-size: clamp(2.3rem, 7vw, 3.6rem); line-height: 1; letter-spacing: -.02em; text-wrap: balance; }
+.lede { margin: 0; font-size: 1.15rem; color: var(--ink-2); max-width: 38rem; }
+nav.toc { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .6rem; }
+nav.toc a {
+  font-size: .9rem; text-decoration: none; color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 999px; padding: .2rem .7rem; background: var(--surface);
+}
+nav.toc a:hover { border-color: var(--cs); color: var(--cs); }
+
+h2 { margin: 0; font-size: 1.55rem; line-height: 1.2; letter-spacing: -.01em; text-wrap: balance; }
+h3 { margin: 0; font-size: 1.1rem; }
+section { display: grid; gap: 1rem; }
+section > p, .prose p { margin: 0; max-width: 40rem; }
+.note { color: var(--ink-2); font-size: .95rem; }
+
+/* ---------- this week ---------- */
+.now {
+  background: var(--surface);
+  border: 1.5px solid var(--cs);
+  border-radius: 14px;
+  padding: 1.25rem 1.25rem 1.35rem;
+  display: grid;
+  gap: 1rem;
+}
+.now-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem 1rem; }
+.now-label { font: 600 .78rem/1 var(--ff-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--cs); }
+.now-title { margin: 0; font-size: 1.5rem; line-height: 1.2; }
+.now-links { display: flex; flex-wrap: wrap; gap: .5rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font: 700 .95rem/1 var(--ff-body); text-decoration: none;
+  padding: .6rem .9rem; border-radius: 9px;
+  background: var(--cs); color: var(--surface);
+}
+.btn.ghost { background: transparent; color: var(--cs); border: 1.5px solid var(--cs); }
+.btn:hover { filter: brightness(1.08); }
+.theme-pick { display: grid; gap: .5rem; padding-top: .9rem; border-top: 1px solid var(--rule); }
+.theme-pick label { font-weight: 700; }
+.theme-pick select {
+  font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper);
+  border: 1.5px solid var(--rule); border-radius: 9px; padding: .5rem .6rem; max-width: 100%;
+}
+.row-out { display: grid; gap: .35rem; min-width: 0; }
+.row-out .feature { font-size: .9rem; color: var(--ink-2); }
+.row-out .theme-row { margin: 0; font-size: 1.02rem; }
+.row-out .game-row { margin: 0; font-size: .95rem; color: var(--ink-2); }
+.row-out code { background: var(--cs-soft); padding: .05rem .3rem; border-radius: 4px; overflow-wrap: anywhere; }
+
+/* ---------- timeline ---------- */
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.timeline li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--rule);
+}
+.timeline li:last-child { border-bottom: 1px solid var(--rule); }
+.at { font: 600 1.05rem/1.4 var(--ff-mono); color: var(--cs); font-variant-numeric: tabular-nums; }
+.at small { display: block; font: 400 .72rem/1.3 var(--ff-mono); color: var(--ink-2); }
+.step { display: grid; gap: .5rem; min-width: 0; }
+.step p { margin: 0; }
+.huddles { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.huddle { border: 1px dashed var(--rule); border-radius: 10px; padding: .7rem .8rem; background: var(--surface); }
+.huddle b { display: block; }
+.huddle span { font-size: .93rem; color: var(--ink-2); }
+
+.cmds { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.cmd { min-width: 0; }
+.cmd h4 { margin: 0 0 .3rem; font-size: .85rem; color: var(--ink-2); font-weight: 700; }
+pre {
+  margin: 0; padding: .7rem .8rem; overflow-x: auto;
+  background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px;
+  font-size: .86rem; line-height: 1.55;
+}
+.k { display: inline-block; font: 600 .82rem/1 var(--ff-mono); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 5px; padding: .15rem .35rem; background: var(--surface); }
+
+/* ---------- three lines ---------- */
+.readme {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 10px;
+  padding: .9rem 1rem; font: 400 .9rem/1.6 var(--ff-mono); overflow-x: auto;
+}
+.readme .h { color: var(--cs); font-weight: 600; }
+.readme p { margin: 0; white-space: pre-wrap; }
+
+/* ---------- ladder ---------- */
+ol.ladder { margin: 0; padding: 0; list-style: none; display: grid; gap: .45rem; counter-reset: rung; }
+ol.ladder li {
+  counter-increment: rung;
+  display: grid; grid-template-columns: 2rem 1fr; gap: .6rem; align-items: baseline;
+  padding: .55rem .8rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px;
+}
+ol.ladder li::before {
+  content: counter(rung);
+  font: 600 .9rem/1.6 var(--ff-mono); color: var(--cs);
+  text-align: center; border: 1.5px solid var(--cs); border-radius: 50%; width: 1.7rem; height: 1.7rem;
+}
+ol.ladder li:last-child { border-color: var(--marker-help); }
+ol.ladder li:last-child::before { color: var(--marker-help); border-color: var(--marker-help); }
+
+/* ---------- asking me ---------- */
+.board {
+  background: var(--board);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 1rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+}
+.col { display: grid; gap: .45rem; align-content: start; min-width: 0; }
+.col h3 {
+  font: 700 1.15rem/1.1 var(--ff-body);
+  padding-bottom: .45rem; border-bottom: 3px solid currentColor;
+}
+.col.help h3 { color: var(--marker-help); }
+.col.verify h3 { color: var(--marker-verify); }
+.col.late h3 { color: var(--marker-late); }
+.col p { margin: 0; font-size: .95rem; }
+.col .when { font-weight: 700; }
+
+ul.ready { margin: 0; padding-left: 1.2rem; display: grid; gap: .3rem; }
+.callout {
+  background: var(--cs-soft); border-radius: 10px; padding: .85rem 1rem;
+  display: grid; gap: .3rem;
+}
+.callout p { margin: 0; }
+
+/* ---------- late ---------- */
+ol.path { margin: 0; padding-left: 1.4rem; display: grid; gap: .6rem; max-width: 40rem; }
+ol.path li::marker { font-family: var(--ff-mono); font-weight: 600; color: var(--cs); }
+
+/* ---------- avatar ---------- */
+.claim { display: grid; gap: 1.1rem; grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 640px) { .claim { grid-template-columns: 1fr 9.5rem; } }
+.qr { background: #FFFFFF; padding: .45rem; border-radius: 10px; border: 1px solid var(--rule); width: 9.5rem; max-width: 100%; }
+.qr svg { display: block; width: 100%; height: auto; }
+.qr figcaption { font-size: .75rem; color: #57556C; text-align: center; margin-top: .25rem; }
+.claim ul { margin: 0; padding-left: 1.2rem; display: grid; gap: .35rem; }
+
+.grid-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: .3rem 1rem; }
+.count { font: 600 .9rem/1.4 var(--ff-mono); font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.grid-scroll { overflow-x: auto; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); }
+table.avatars { border-collapse: collapse; font-size: .85rem; min-width: 100%; }
+table.avatars th, table.avatars td { padding: 0; text-align: center; }
+table.avatars thead th { padding: .45rem .1rem .35rem; vertical-align: bottom; }
+.chead { display: inline-flex; flex-direction: column; align-items: center; gap: .3rem; }
+.chead i { display: block; width: 1rem; height: 1rem; border-radius: 50%; }
+.chead span { writing-mode: vertical-rl; transform: rotate(180deg); font-size: .78rem; color: var(--ink-2); }
+table.avatars tbody th {
+  text-align: left; font-weight: 400; white-space: nowrap; padding: .15rem .6rem .15rem .6rem;
+  position: sticky; left: 0; background: var(--surface); z-index: 1;
+}
+table.avatars tbody tr + tr > * { border-top: 1px solid var(--rule); }
+table.avatars td { width: 2.1rem; height: 2.1rem; }
+.cell { display: grid; place-items: center; width: 100%; height: 100%; }
+.cell .dot { width: .7rem; height: .7rem; border-radius: 50%; opacity: .85; }
+td.taken .cell { background: var(--taken); color: var(--taken-ink); font: 700 .8rem/1 var(--ff-mono); }
+.legend { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; font-size: .88rem; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { display: inline-grid; place-items: center; width: 1.1rem; height: 1.1rem; border-radius: 4px; }
+.sw.t { background: var(--taken); color: var(--taken-ink); font: 700 .7rem/1 var(--ff-mono); }
+.sw.f { border: 1px solid var(--rule); }
+.sw.f i { width: .55rem; height: .55rem; border-radius: 50%; background: #1E5BC6; }
+
+/* ---------- links ---------- */
+ul.links { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+ul.links a {
+  display: grid; gap: .1rem; height: 100%;
+  text-decoration: none; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: .7rem .85rem;
+}
+ul.links a:hover { border-color: var(--cs); }
+ul.links b { color: var(--cs); }
+ul.links span { font-size: .9rem; color: var(--ink-2); }
+
+footer { color: var(--ink-2); font-size: .85rem; border-top: 1px solid var(--rule); padding-top: 1rem; }
+footer p { margin: 0; }
+
+.print-only { display: none; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn, nav.toc a, ul.links a { transition: border-color .15s, color .15s, filter .15s; }
+}
+
+/* ---------- print: the PDF for the course page ---------- */
+@media print {
+  @page { size: A4; margin: 13mm 14mm; }
+  :root { --paper: #FFFFFF; --surface: #FFFFFF; --board: #FFFFFF; color-scheme: light; }
+  body { font-size: 10pt; line-height: 1.45; background: #FFFFFF; color: #1C1A2B; }
+  .wrap { max-width: none; padding: 0; gap: 1.1rem; }
+  h1 { font-size: 24pt; }
+  h2 { font-size: 13.5pt; }
+  .lede { font-size: 11pt; }
+  nav.toc, .theme-pick, .now-links, .grid-block, .screen-only { display: none !important; }
+  .print-only { display: block; }
+  .now { padding: .6rem .8rem; gap: .4rem; border-width: 1px; }
+  .now-title { font-size: 13pt; }
+  .timeline li { padding: .45rem 0; gap: .7rem; break-inside: avoid; }
+  section { gap: .5rem; }
+  pre { font-size: 8pt; padding: .35rem .5rem; }
+  .board { padding: .6rem; gap: .6rem; break-inside: avoid; }
+  .col h3 { font-size: 11pt; }
+  .col p { font-size: 9pt; }
+  ol.ladder li { padding: .25rem .6rem; }
+  ol.ladder { gap: .25rem; }
+  .huddle { padding: .4rem .6rem; }
+  .readme { font-size: 8pt; padding: .45rem .6rem; }
+  .claim { grid-template-columns: 1fr 26mm; }
+  .qr { width: 26mm; padding: 1.5mm; }
+  a { color: #3E26A8; }
+  a[data-print]::after { content: " (" attr(data-print) ")"; font-size: .85em; color: #57556C; word-break: break-all; }
+  ul.links { grid-template-columns: 1fr 1fr; gap: .3rem; }
+  ul.links a { padding: .35rem .55rem; }
+  .callout, .claim, ol.path li, ul.links li { break-inside: avoid; }
+  .now-head { display: none; }
+  .btn { background: none; color: #3E26A8; padding: 0; border: 0; border-radius: 0; }
+  footer { display: none; }
+  h2, h3 { break-after: avoid; }
+  section > p:first-of-type { break-before: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">FCPL lab · C# · every session</p>
+  <h1>Every lab, the same way</h1>
+  <p class="lede">Keep this page open during the lab. The routine is the same every week; only the brief changes. If you know it already, come in and start.</p>
+  <nav class="toc" aria-label="On this page">
+    <a href="#routine">How a lab runs</a>
+    <a href="#plan">Three lines first</a>
+    <a href="#stuck">Stuck?</a>
+    <a href="#ask">Asking me</a>
+    <a href="#verify">Getting verified</a>
+    <a href="#late">Joined late</a>
+    <a href="#avatar">Your avatar</a>
+    <a href="#links">Links</a>
+  </nav>
+</header>
+
+<!-- This week: filled in by the script from the session dates; the static text is the fallback. -->
+<div class="now" id="now" aria-live="polite">
+  <div class="now-head">
+    <span class="now-label" id="now-label">This week</span>
+    <p class="now-title" id="now-title">Open the brief for today's lab</p>
+  </div>
+  <div class="now-links" id="now-links">
+    <a class="btn" id="brief-link" href="https://github.com/x86bogdan/fcpl-2026/tree/main/labs">The lab briefs</a>
+    <a class="btn ghost" id="done-link" href="https://github.com/x86bogdan/fcpl-2026/tree/main/labs" hidden>Done means</a>
+  </div>
+  <p class="print-only">The brief for each lab, step by step, and what “done” means for it: <a href="https://github.com/x86bogdan/fcpl-2026/tree/main/labs">github.com/x86bogdan/fcpl-2026 → labs</a>. Your theme's plan for every session: your theme's spec → <i>What each session adds</i>.</p>
+  <div class="theme-pick">
+    <label for="theme">What does this lab mean in my project?</label>
+    <select id="theme">
+      <option value="">Choose your theme…</option>
+    </select>
+    <div class="row-out" id="row-out">
+      <p class="note">Each theme's spec has a table, <i>What each session adds</i>, with one row per lab. Pick your theme and this week's row appears here.</p>
+    </div>
+  </div>
+</div>
+
+<section id="routine">
+  <h2>How a lab runs</h2>
+  <ol class="timeline">
+    <li>
+      <div class="at">1</div>
+      <div class="step">
+        <p><b>Come in and start.</b> You don't have to wait for me. Open today's brief, then get the new tests:</p>
+        <div class="cmds">
+          <div class="cmd">
+            <h4>Lab PC (Rider's terminal, <span class="k">Alt</span>+<span class="k">F12</span>)</h4>
+            <pre>Download ZIP → extract → Rider
+sh sq.sh update
+sh sq.sh test</pre>
+          </div>
+          <div class="cmd">
+            <h4>Your laptop, with git</h4>
+            <pre>git pull
+sq update
+sq test</pre>
+          </div>
+        </div>
+        <p class="note">Today's lab shows as <i>not started</i> and every earlier lab should still be green. Red on an earlier lab? Fix that first, or ask me for help.</p>
+      </div>
+    </li>
+    <li>
+      <div class="at">2</div>
+      <div class="step">
+        <p><b>A short briefing.</b> What today's feature is, one live demo, and what “done” means. Already working? Keep going and listen with one ear: everything on the slides is also in the brief.</p>
+      </div>
+    </li>
+    <li>
+      <div class="at">3</div>
+      <div class="step">
+        <p><b>Two short huddles at the front.</b> Join one if it helps, skip both if you know what to do.</p>
+        <div class="huddles">
+          <div class="huddle"><b>What does today mean in my project?</b><span>Bring your theme's row (top of this page). You leave with your three lines.</span></div>
+          <div class="huddle"><b>The first step, together</b><span>Step 1 of the brief, live on the projector, until your first test runs.</span></div>
+        </div>
+      </div>
+    </li>
+    <li>
+      <div class="at">4</div>
+      <div class="step">
+        <p><b>Build.</b> One step of the brief at a time, <code>sq test</code> after each. When you're stuck or green, <a href="#ask">ask me</a>. Every so often I stop the room for a minute to show a mistake I keep seeing.</p>
+      </div>
+    </li>
+    <li>
+      <div class="at">5</div>
+      <div class="step">
+        <p><b>Save to GitHub, every time.</b> Push, or <code>sh sq.sh upload</code> and <i>Upload files</i>, even if it's red. Work that isn't on GitHub can't be graded, and I can't help with it next week.</p>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<section id="plan">
+  <h2>Before you write code: three lines</h2>
+  <p>Say what today's feature is <em>in your app</em> before you build it. Add a heading for the lab to your repository's <code>README.md</code> and write three lines under it: which of your classes change, what they do in your app, and where you'll see it working. Use your theme's row as the starting point. When I verify you, I read these first.</p>
+  <div class="readme" aria-label="Example, from a project that isn't one of the themes">
+    <p><span class="h">## Lab 05 in my project</span>
+- ObservationLog becomes the collection: log[0], log["obs-0017"], foreach.
+- RecentlyUsed&lt;Telescope&gt; remembers the last 3 telescopes I picked.
+- In the app: --recent prints them, newest first.</p>
+  </div>
+  <p class="note">The example is an observatory log, which isn't one of the themes. Yours names your own classes. Can't write the three lines? Join the first huddle: that's what it's for.</p>
+</section>
+
+<section id="stuck">
+  <h2>Stuck? Climb the ladder</h2>
+  <ol class="ladder">
+    <li><span><b>Read the failing test.</b> <code>sq test</code> prints its name and a message that says what's missing. The name is usually the answer to “what does it want?”</span></li>
+    <li><span><b>Re-read the step</b> in the brief you're on. Each step says where the code goes.</span></li>
+    <li><span><b>Look up the syntax</b> in the <a href="https://x86bogdan.github.io/fcpl-2026/cheatsheet/">C# phrasebook</a>: search with the Java word you know, or paste the compiler error.</span></li>
+    <li><span><b>Read <code>reference/</code></b> in your repository for the shape: one theme's solution to the earlier labs.</span></li>
+    <li><span><b>Ask your neighbour</b> to explain, not to type it for you.</span></li>
+    <li><span><b>Ask me for help.</b> I'll get you unstuck. You still write the code.</span></li>
+  </ol>
+  <p class="note">AI assistants are allowed if you say so in your README. Ask one to explain an error rather than to write the step: in verification you change and explain your own code.</p>
+</section>
+
+<section id="ask">
+  <h2>Ask me: help, or verify</h2>
+  <p>Don't wait for me to come round. Raise your hand or call me over, and say which one you need. I alternate between help and verification, so nobody waits for the whole room.</p>
+  <div class="board">
+    <div class="col help">
+      <h3>“Help”</h3>
+      <p class="when">You climbed the ladder and you're still stuck.</p>
+      <p>I get you moving again in a few minutes. You still write the code.</p>
+    </div>
+    <div class="col verify">
+      <h3>“Verify”</h3>
+      <p class="when">Today's lab is green on GitHub.</p>
+      <p>Green in your repository's <b>Actions</b> tab, with every earlier lab still green. Your screen isn't enough: only the CI run counts. If you don't ask, I may not know you're ready.</p>
+    </div>
+    <div class="col late">
+      <h3>“Late lab”</h3>
+      <p class="when">An earlier lab you finished after its deadline, or one you missed.</p>
+      <p>Tell me it's ready. I check late labs when there's time, once help and verification are dealt with.</p>
+    </div>
+  </div>
+</section>
+
+<section id="verify">
+  <h2>Getting verified</h2>
+  <h3>When I reach you, have open</h3>
+  <ul class="ready">
+    <li>your repository's <b>Actions</b> tab, on the green run</li>
+    <li>your project in Rider (or your IDE), building</li>
+    <li>your three lines in the README</li>
+  </ul>
+  <p><b>About five minutes.</b> I ask for one small change to your code and two “why” questions about it. Tests are 40% of the lab, the change 30%, the questions 30%.</p>
+  <div class="callout">
+    <p><b>Not reached today? You lose nothing.</b> A lab that's green on GitHub by <b>Friday 23:59</b> of its week counts in full, whenever I verify it. After that it's late work, worth up to 8.</p>
+  </div>
+</section>
+
+<section id="late">
+  <h2>Joined late, or missed labs?</h2>
+  <p>Do these in order. Lab 02 comes first because every later lab builds on its types and its store.</p>
+  <ol class="path">
+    <li><b>Choose a theme</b> from the <a href="https://github.com/x86bogdan/fcpl-2026/blob/main/themes/README.md" data-print="github.com/x86bogdan/fcpl-2026 → themes">catalogue</a> and read its spec. It's your project for the rest of the semester.</li>
+    <li><b>Make your repository</b> from the <a href="https://github.com/x86bogdan/sharpquest-2026" data-print="github.com/x86bogdan/sharpquest-2026">course template</a>: <i>Use this template</i>, private, then <b>Settings → Collaborators → add <code>x86bogdan</code></b>. The steps are in the template's README.</li>
+    <li><b>Claim your avatar</b> with the <a href="#avatar">claim form</a>. Without it, your results can't reach the scoreboard.</li>
+    <li><b>Lab 02.</b> Follow its <a href="https://github.com/x86bogdan/fcpl-2026/blob/main/labs/02-types/README.md">brief</a>. <code>reference/Lab02/</code> in your repository shows one theme's solution: read it for the shape, then write yours for your theme.</li>
+    <li><b>Then join this week's lab in the room.</b> It counts in full if it's green by Friday 23:59, so don't spend the lab on old ones.</li>
+    <li><b>Fill in the other missed labs</b> at your own pace. Lab 03 can wait: nothing builds on it. If a lab you missed has a catch-up kit in <code>catchup/</code>, it lets you carry on, but it earns nothing for that lab.</li>
+  </ol>
+  <div class="callout">
+    <p><b>What a missed lab is worth.</b> Finished later, it's late work: up to 8 points, no stretch bonus, and it doesn't use one of your 4 recoveries. When it's green, tell me it's ready. The full rules are in the <a href="https://github.com/x86bogdan/fcpl-2026/blob/main/CONTRACT.md" data-print="github.com/x86bogdan/fcpl-2026 → CONTRACT.md">course contract</a>.</p>
+  </div>
+</section>
+
+<section id="avatar">
+  <h2>Claim or change your avatar</h2>
+  <div class="claim">
+    <div class="prose" style="display:grid;gap:.75rem">
+      <p>Your avatar is your name on the scoreboard: one animal in one colour, like <b>Sky Owl</b>. The same form is for everything about your entry.</p>
+      <ul>
+        <li><b>Missed the form</b> in session 1: fill it in now.</li>
+        <li><b>Changed repository</b> or <b>want another avatar</b>: fill it in again with the <b>same GitHub username</b>. Your latest answer replaces the earlier one.</li>
+        <li><b>Repository</b>: its full address, like <code>https://github.com/yourname/fcpl-lab</code>. Not just its name, and not your profile page.</li>
+        <li><b>Invited <code>x86bogdan</code> more than a week ago</b> and nothing happened? Invitations expire after 7 days. Send it again: Settings → Collaborators.</li>
+      </ul>
+      <p><a class="btn" href="https://forms.gle/E5Us5KN8srhMMMEH8" data-print="forms.gle/E5Us5KN8srhMMMEH8">Open the claim form</a></p>
+    </div>
+    <figure class="qr" style="margin:0">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges" role="img" aria-label="QR code for https://forms.gle/E5Us5KN8srhMMMEH8"><rect width="33" height="33" fill="#fff"/><path d="M2,2h1v1h-1zM3,2h1v1h-1zM4,2h1v1h-1zM5,2h1v1h-1zM6,2h1v1h-1zM7,2h1v1h-1zM8,2h1v1h-1zM10,2h1v1h-1zM11,2h1v1h-1zM12,2h1v1h-1zM13,2h1v1h-1zM14,2h1v1h-1zM15,2h1v1h-1zM16,2h1v1h-1zM17,2h1v1h-1zM19,2h1v1h-1zM22,2h1v1h-1zM24,2h1v1h-1zM25,2h1v1h-1zM26,2h1v1h-1zM27,2h1v1h-1zM28,2h1v1h-1zM29,2h1v1h-1zM30,2h1v1h-1zM2,3h1v1h-1zM8,3h1v1h-1zM11,3h1v1h-1zM12,3h1v1h-1zM13,3h1v1h-1zM17,3h1v1h-1zM20,3h1v1h-1zM22,3h1v1h-1zM24,3h1v1h-1zM30,3h1v1h-1zM2,4h1v1h-1zM4,4h1v1h-1zM5,4h1v1h-1zM6,4h1v1h-1zM8,4h1v1h-1zM10,4h1v1h-1zM11,4h1v1h-1zM13,4h1v1h-1zM14,4h1v1h-1zM15,4h1v1h-1zM19,4h1v1h-1zM22,4h1v1h-1zM24,4h1v1h-1zM26,4h1v1h-1zM27,4h1v1h-1zM28,4h1v1h-1zM30,4h1v1h-1zM2,5h1v1h-1zM4,5h1v1h-1zM5,5h1v1h-1zM6,5h1v1h-1zM8,5h1v1h-1zM11,5h1v1h-1zM12,5h1v1h-1zM14,5h1v1h-1zM17,5h1v1h-1zM20,5h1v1h-1zM22,5h1v1h-1zM24,5h1v1h-1zM26,5h1v1h-1zM27,5h1v1h-1zM28,5h1v1h-1zM30,5h1v1h-1zM2,6h1v1h-1zM4,6h1v1h-1zM5,6h1v1h-1zM6,6h1v1h-1zM8,6h1v1h-1zM12,6h1v1h-1zM17,6h1v1h-1zM18,6h1v1h-1zM20,6h1v1h-1zM24,6h1v1h-1zM26,6h1v1h-1zM27,6h1v1h-1zM28,6h1v1h-1zM30,6h1v1h-1zM2,7h1v1h-1zM8,7h1v1h-1zM10,7h1v1h-1zM11,7h1v1h-1zM12,7h1v1h-1zM13,7h1v1h-1zM14,7h1v1h-1zM15,7h1v1h-1zM16,7h1v1h-1zM19,7h1v1h-1zM22,7h1v1h-1zM24,7h1v1h-1zM30,7h1v1h-1zM2,8h1v1h-1zM3,8h1v1h-1zM4,8h1v1h-1zM5,8h1v1h-1zM6,8h1v1h-1zM7,8h1v1h-1zM8,8h1v1h-1zM10,8h1v1h-1zM12,8h1v1h-1zM14,8h1v1h-1zM16,8h1v1h-1zM18,8h1v1h-1zM20,8h1v1h-1zM22,8h1v1h-1zM24,8h1v1h-1zM25,8h1v1h-1zM26,8h1v1h-1zM27,8h1v1h-1zM28,8h1v1h-1zM29,8h1v1h-1zM30,8h1v1h-1zM11,9h1v1h-1zM12,9h1v1h-1zM13,9h1v1h-1zM15,9h1v1h-1zM20,9h1v1h-1zM22,9h1v1h-1zM2,10h1v1h-1zM4,10h1v1h-1zM8,10h1v1h-1zM9,10h1v1h-1zM11,10h1v1h-1zM12,10h1v1h-1zM13,10h1v1h-1zM14,10h1v1h-1zM15,10h1v1h-1zM19,10h1v1h-1zM21,10h1v1h-1zM25,10h1v1h-1zM28,10h1v1h-1zM30,10h1v1h-1zM5,11h1v1h-1zM9,11h1v1h-1zM10,11h1v1h-1zM12,11h1v1h-1zM14,11h1v1h-1zM17,11h1v1h-1zM19,11h1v1h-1zM22,11h1v1h-1zM23,11h1v1h-1zM24,11h1v1h-1zM25,11h1v1h-1zM29,11h1v1h-1zM30,11h1v1h-1zM4,12h1v1h-1zM5,12h1v1h-1zM7,12h1v1h-1zM8,12h1v1h-1zM10,12h1v1h-1zM11,12h1v1h-1zM12,12h1v1h-1zM14,12h1v1h-1zM15,12h1v1h-1zM16,12h1v1h-1zM17,12h1v1h-1zM18,12h1v1h-1zM21,12h1v1h-1zM23,12h1v1h-1zM24,12h1v1h-1zM26,12h1v1h-1zM27,12h1v1h-1zM28,12h1v1h-1zM30,12h1v1h-1zM2,13h1v1h-1zM3,13h1v1h-1zM4,13h1v1h-1zM7,13h1v1h-1zM9,13h1v1h-1zM11,13h1v1h-1zM12,13h1v1h-1zM16,13h1v1h-1zM22,13h1v1h-1zM23,13h1v1h-1zM24,13h1v1h-1zM25,13h1v1h-1zM26,13h1v1h-1zM27,13h1v1h-1zM2,14h1v1h-1zM3,14h1v1h-1zM4,14h1v1h-1zM8,14h1v1h-1zM9,14h1v1h-1zM10,14h1v1h-1zM11,14h1v1h-1zM12,14h1v1h-1zM13,14h1v1h-1zM15,14h1v1h-1zM16,14h1v1h-1zM18,14h1v1h-1zM20,14h1v1h-1zM21,14h1v1h-1zM23,14h1v1h-1zM24,14h1v1h-1zM25,14h1v1h-1zM30,14h1v1h-1zM4,15h1v1h-1zM6,15h1v1h-1zM9,15h1v1h-1zM10,15h1v1h-1zM11,15h1v1h-1zM12,15h1v1h-1zM13,15h1v1h-1zM15,15h1v1h-1zM16,15h1v1h-1zM18,15h1v1h-1zM19,15h1v1h-1zM20,15h1v1h-1zM21,15h1v1h-1zM24,15h1v1h-1zM25,15h1v1h-1zM29,15h1v1h-1zM30,15h1v1h-1zM2,16h1v1h-1zM3,16h1v1h-1zM4,16h1v1h-1zM5,16h1v1h-1zM8,16h1v1h-1zM11,16h1v1h-1zM14,16h1v1h-1zM17,16h1v1h-1zM19,16h1v1h-1zM20,16h1v1h-1zM21,16h1v1h-1zM25,16h1v1h-1zM30,16h1v1h-1zM4,17h1v1h-1zM6,17h1v1h-1zM7,17h1v1h-1zM12,17h1v1h-1zM13,17h1v1h-1zM15,17h1v1h-1zM18,17h1v1h-1zM22,17h1v1h-1zM24,17h1v1h-1zM2,18h1v1h-1zM4,18h1v1h-1zM5,18h1v1h-1zM6,18h1v1h-1zM8,18h1v1h-1zM9,18h1v1h-1zM10,18h1v1h-1zM12,18h1v1h-1zM13,18h1v1h-1zM15,18h1v1h-1zM17,18h1v1h-1zM18,18h1v1h-1zM21,18h1v1h-1zM22,18h1v1h-1zM24,18h1v1h-1zM30,18h1v1h-1zM3,19h1v1h-1zM4,19h1v1h-1zM9,19h1v1h-1zM10,19h1v1h-1zM11,19h1v1h-1zM13,19h1v1h-1zM18,19h1v1h-1zM20,19h1v1h-1zM22,19h1v1h-1zM24,19h1v1h-1zM25,19h1v1h-1zM28,19h1v1h-1zM29,19h1v1h-1zM30,19h1v1h-1zM2,20h1v1h-1zM3,20h1v1h-1zM6,20h1v1h-1zM8,20h1v1h-1zM9,20h1v1h-1zM10,20h1v1h-1zM11,20h1v1h-1zM14,20h1v1h-1zM15,20h1v1h-1zM16,20h1v1h-1zM17,20h1v1h-1zM20,20h1v1h-1zM21,20h1v1h-1zM24,20h1v1h-1zM27,20h1v1h-1zM30,20h1v1h-1zM4,21h1v1h-1zM5,21h1v1h-1zM7,21h1v1h-1zM10,21h1v1h-1zM11,21h1v1h-1zM12,21h1v1h-1zM13,21h1v1h-1zM14,21h1v1h-1zM16,21h1v1h-1zM18,21h1v1h-1zM20,21h1v1h-1zM21,21h1v1h-1zM22,21h1v1h-1zM23,21h1v1h-1zM24,21h1v1h-1zM25,21h1v1h-1zM26,21h1v1h-1zM2,22h1v1h-1zM3,22h1v1h-1zM6,22h1v1h-1zM8,22h1v1h-1zM10,22h1v1h-1zM13,22h1v1h-1zM15,22h1v1h-1zM16,22h1v1h-1zM18,22h1v1h-1zM22,22h1v1h-1zM23,22h1v1h-1zM24,22h1v1h-1zM25,22h1v1h-1zM26,22h1v1h-1zM27,22h1v1h-1zM29,22h1v1h-1zM10,23h1v1h-1zM15,23h1v1h-1zM16,23h1v1h-1zM18,23h1v1h-1zM20,23h1v1h-1zM22,23h1v1h-1zM26,23h1v1h-1zM27,23h1v1h-1zM28,23h1v1h-1zM30,23h1v1h-1zM2,24h1v1h-1zM3,24h1v1h-1zM4,24h1v1h-1zM5,24h1v1h-1zM6,24h1v1h-1zM7,24h1v1h-1zM8,24h1v1h-1zM10,24h1v1h-1zM14,24h1v1h-1zM17,24h1v1h-1zM20,24h1v1h-1zM22,24h1v1h-1zM24,24h1v1h-1zM26,24h1v1h-1zM30,24h1v1h-1zM2,25h1v1h-1zM8,25h1v1h-1zM13,25h1v1h-1zM15,25h1v1h-1zM18,25h1v1h-1zM22,25h1v1h-1zM26,25h1v1h-1zM29,25h1v1h-1zM30,25h1v1h-1zM2,26h1v1h-1zM4,26h1v1h-1zM5,26h1v1h-1zM6,26h1v1h-1zM8,26h1v1h-1zM12,26h1v1h-1zM15,26h1v1h-1zM18,26h1v1h-1zM21,26h1v1h-1zM22,26h1v1h-1zM23,26h1v1h-1zM24,26h1v1h-1zM25,26h1v1h-1zM26,26h1v1h-1zM27,26h1v1h-1zM29,26h1v1h-1zM30,26h1v1h-1zM2,27h1v1h-1zM4,27h1v1h-1zM5,27h1v1h-1zM6,27h1v1h-1zM8,27h1v1h-1zM11,27h1v1h-1zM12,27h1v1h-1zM14,27h1v1h-1zM15,27h1v1h-1zM18,27h1v1h-1zM19,27h1v1h-1zM21,27h1v1h-1zM23,27h1v1h-1zM26,27h1v1h-1zM27,27h1v1h-1zM28,27h1v1h-1zM30,27h1v1h-1zM2,28h1v1h-1zM4,28h1v1h-1zM5,28h1v1h-1zM6,28h1v1h-1zM8,28h1v1h-1zM10,28h1v1h-1zM11,28h1v1h-1zM13,28h1v1h-1zM14,28h1v1h-1zM15,28h1v1h-1zM16,28h1v1h-1zM17,28h1v1h-1zM19,28h1v1h-1zM20,28h1v1h-1zM22,28h1v1h-1zM23,28h1v1h-1zM26,28h1v1h-1zM29,28h1v1h-1zM30,28h1v1h-1zM2,29h1v1h-1zM8,29h1v1h-1zM11,29h1v1h-1zM13,29h1v1h-1zM15,29h1v1h-1zM18,29h1v1h-1zM22,29h1v1h-1zM23,29h1v1h-1zM24,29h1v1h-1zM26,29h1v1h-1zM27,29h1v1h-1zM2,30h1v1h-1zM3,30h1v1h-1zM4,30h1v1h-1zM5,30h1v1h-1zM6,30h1v1h-1zM7,30h1v1h-1zM8,30h1v1h-1zM10,30h1v1h-1zM11,30h1v1h-1zM15,30h1v1h-1zM16,30h1v1h-1zM18,30h1v1h-1zM19,30h1v1h-1zM22,30h1v1h-1zM23,30h1v1h-1zM24,30h1v1h-1zM26,30h1v1h-1zM27,30h1v1h-1zM30,30h1v1h-1z" fill="#000"/></svg>
+      <figcaption>Claim form</figcaption>
+    </figure>
+  </div>
+
+  <div class="grid-block" style="display:grid;gap:.6rem">
+    <div class="grid-head">
+      <h3>Already taken</h3>
+      <span class="count" id="taken-count"></span>
+    </div>
+    <p class="note" id="taken-source"></p>
+    <div class="legend">
+      <span><i class="sw t">✗</i> taken</span>
+      <span><i class="sw f"><i></i></i> free</span>
+    </div>
+    <div class="grid-scroll">
+      <table class="avatars" id="avatars" aria-describedby="taken-source"></table>
+    </div>
+    <p class="note">If two people pick the same avatar, the first one keeps it and the second is asked to pick again.</p>
+  </div>
+  <p class="print-only">Which avatars are already taken: the live list on this page online, <a href="https://x86bogdan.github.io/fcpl-2026/routine/#avatar">x86bogdan.github.io/fcpl-2026/routine#avatar</a>.</p>
+</section>
+
+<section id="links">
+  <h2>Everything else</h2>
+  <ul class="links">
+    <li><a href="https://github.com/x86bogdan/fcpl-2026/tree/main/labs" data-print="github.com/x86bogdan/fcpl-2026/tree/main/labs"><b>Lab briefs</b><span>Each lab step by step, and what “done” means</span></a></li>
+    <li><a href="https://x86bogdan.github.io/fcpl-2026/cheatsheet/" data-print="x86bogdan.github.io/fcpl-2026/cheatsheet"><b>C# phrasebook</b><span>C# next to Java and C++, and the compiler errors</span></a></li>
+    <li><a href="https://github.com/x86bogdan/fcpl-2026/blob/main/CONTRACT.md" data-print="github.com/x86bogdan/fcpl-2026 → CONTRACT.md"><b>Course contract</b><span>Grading, late work, recovery, AI</span></a></li>
+    <li><a href="https://github.com/x86bogdan/fcpl-2026/blob/main/LAB-PC.md" data-print="github.com/x86bogdan/fcpl-2026 → LAB-PC.md"><b>Working on a lab PC</b><span>No git: ZIP, Rider's terminal, upload</span></a></li>
+    <li><a href="https://github.com/x86bogdan/fcpl-2026/blob/main/themes/README.md" data-print="github.com/x86bogdan/fcpl-2026 → themes"><b>The 21 themes</b><span>Each with its plan for every session</span></a></li>
+    <li><a href="https://x86bogdan.github.io/sharpquest-2026/" data-print="x86bogdan.github.io/sharpquest-2026"><b>Leaderboard</b><span>Updated after each week's labs</span></a></li>
+  </ul>
+</section>
+
+<footer>
+  <p>FCPL lab · runs as SharpQuest · <span class="screen-only">this page: </span><a href="https://x86bogdan.github.io/fcpl-2026/routine/">x86bogdan.github.io/fcpl-2026/routine</a></p>
+</footer>
+
+</div>
+
+<script>
+(() => {
+  // ---- Settings -------------------------------------------------------------------------------
+  // The live list of taken avatars: a Google Sheet tab published to the web as CSV, one avatar per
+  // row ("Sky Owl"). Leave empty to use only the snapshot below.
+  const TAKEN_CSV_URL = "";
+  // Used when the live list is empty or can't be read. Snapshot date, then the avatars.
+  const SNAPSHOT_DATE = "16 October";
+  const SNAPSHOT = ["Blue Fox", "Gold Hare", "Gold Hedgehog", "Gold Stag", "Green Bear", "Green Beetle", "Green Falcon", "Green Owl", "Grey Bat", "Grey Boar", "Lime Fox", "Lime Gecko", "Lime Toad", "Lime Turtle", "Navy Penguin", "Orange Fox", "Orange Owl", "Orange Turtle", "Pink Bear", "Pink Fox", "Pink Otter", "Pink Penguin", "Purple Bat", "Purple Falcon", "Purple Fox", "Purple Owl", "Purple Penguin", "Red Bat", "Red Fox", "Red Owl", "Sky Otter", "Sky Owl", "Sky Turtle"];
+
+  const COURSE = "https://github.com/x86bogdan/fcpl-2026/blob/main";
+  const SPEC_RAW = "https://x86bogdan.github.io/fcpl-2026/themes/";
+
+  // Monday of each lab's week (from the cohort timetable); a week is shown from the Saturday before it. Sessions 13 and 14 are recovery.
+  const WEEKS = [
+    ["02", "2026-10-05"], ["03", "2026-10-12"], ["04", "2026-10-19"], ["05", "2026-10-26"],
+    ["06", "2026-11-02"], ["07", "2026-11-09"], ["08", "2026-11-16"], ["09", "2026-11-23"],
+    ["10", "2026-11-30"], ["11", "2026-12-07"], ["12", "2026-12-14"], ["break", "2026-12-21"],
+    ["13", "2027-01-04"], ["14", "2027-01-11"], ["end", "2027-01-18"]
+  ];
+  const LABS = {
+    "02": ["02-types", "Types & modelling"], "03": ["03-testing", "Testing & the contract"],
+    "04": ["04-oop", "OOP & pattern matching"], "05": ["05-collections", "Collections & generics"],
+    "06": ["06-events", "Functions as values & events"], "07": ["07-linq", "LINQ"],
+    "08": ["08-persistence", "Persistence & async"], "09": ["09-ui", "A window over your model"],
+    "10": ["10-api", "A web API"], "11": ["11-database", "A real database"],
+    "12": ["12-reflection", "Reflection & attributes"]
+  };
+  const THEMES = [
+    ["01-pokedex", "01 Pokédex"], ["02-music-library", "02 Music Library"], ["03-cafe-pos", "03 Café POS"],
+    ["04-game-library", "04 Game Library"], ["05-watchlist", "05 Film & Series Watchlist"],
+    ["06-tcg-deck-builder", "06 TCG Deck Builder"], ["07-f1-season", "07 Formula 1 Season"],
+    ["08-gym-log", "08 Gym & Workout Log"], ["09-recipe-planner", "09 Recipe Book & Meal Planner"],
+    ["10-helpdesk", "10 Helpdesk / Ticket Tracker"], ["11-bookstore-rental", "11 Bookstore Rental"],
+    ["12-plant-care", "12 Plant Care Tracker"], ["13-weather-station", "13 Weather Station"],
+    ["14-portfolio-tracker", "14 Portfolio Tracker"], ["15-dungeon-bestiary", "15 Dungeon Bestiary"],
+    ["16-car-rental", "16 Car Rental"], ["17-listening-stats", "17 Listening Stats"],
+    ["18-flight-board", "18 Airline Flight Board"], ["19-course-planner", "19 University Course Planner"],
+    ["20-slot-machine", "20 Slot Machine Arcade"], ["21-build-a-game", "21 Build a Game"],
+    ["own", "My own idea"]
+  ];
+  const ANIMALS = [["Fox","🦊"],["Bear","🐻"],["Stag","🦌"],["Boar","🐗"],["Owl","🦉"],["Falcon","🦅"],["Penguin","🐧"],
+    ["Hedgehog","🦔"],["Hare","🐇"],["Toad","🐸"],["Otter","🦦"],["Turtle","🐢"],["Gecko","🦎"],["Beetle","🪲"],["Bat","🦇"]];
+  const COLOURS = [["Red","#D32F2F"],["Orange","#EF6C00"],["Gold","#D9B310"],["Lime","#7CB342"],["Green","#2E7D32"],["Sky","#29A3D6"],
+    ["Blue","#1E5BC6"],["Navy","#283C8C"],["Purple","#7B3FC4"],["Pink","#E0569B"],["Brown","#8D5A3B"],["Grey","#78808A"]];
+
+  const $ = id => document.getElementById(id);
+  const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch { /* private window: fine */ } }
+  };
+
+  // ---- This week ------------------------------------------------------------------------------
+  function weekOf(today) {
+    let current = WEEKS[0][0];
+    for (const [lab, monday] of WEEKS) {
+      const from = new Date(monday + "T00:00:00"); from.setDate(from.getDate() - 2);   // from the Saturday, after the Friday deadline
+      if (today >= from) current = lab;
+    }
+    return current;
+  }
+  const now = weekOf(new Date());
+  let session = null;
+  if (LABS[now]) {
+    session = now;
+    const [folder, title] = LABS[now];
+    $("now-label").textContent = "This week · Lab " + now;
+    $("now-title").textContent = title;
+    $("brief-link").textContent = "Open the brief";
+    $("brief-link").href = `${COURSE}/labs/${folder}/README.md`;
+    $("done-link").href = `${COURSE}/labs/${folder}/ACCEPTANCE.md`;
+    $("done-link").hidden = false;
+  } else if (now === "break") {
+    $("now-label").textContent = "Winter break";
+    $("now-title").textContent = "Next: session 13, recovery";
+  } else if (now === "13" || now === "14") {
+    $("now-label").textContent = "This week · Session " + now;
+    $("now-title").textContent = "Recovery: up to 2 labs, booked in advance";
+    $("brief-link").textContent = "Recovery rules";
+    $("brief-link").href = `${COURSE}/CONTRACT.md`;
+  } else {
+    $("now-label").textContent = "The semester is over";
+    $("now-title").textContent = "Thank you";
+  }
+
+  // ---- Your theme's row -------------------------------------------------------------------------
+  const select = $("theme"), out = $("row-out");
+  for (const [slug, name] of THEMES) select.add(new Option(name, slug));
+
+  // Minimal inline markdown: `code`, **bold**, *italic*, [text](url).
+  function md(s) {
+    return esc(s)
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
+      .replace(/\*([^*]+)\*/g, "<i>$1</i>")
+      .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2">$1</a>');
+  }
+  // The "What each session adds" table: | S | Required feature | In this theme | (optional game-track column) |
+  function rowFor(text, s) {
+    const lines = text.replace(/\r/g, "").split("\n");
+    const head = lines.findIndex(l => /^\|\s*S\s*\|\s*Required feature/i.test(l));
+    if (head < 0) return null;
+    for (let i = head + 2; i < lines.length && lines[i].startsWith("|"); i++) {
+      const cells = lines[i].split("|").slice(1, -1).map(c => c.trim());
+      if (parseInt(cells[0], 10) === parseInt(s, 10)) return cells;
+    }
+    return null;
+  }
+  async function showTheme(slug) {
+    if (!slug) {
+      out.innerHTML = '<p class="note">Each theme\'s spec has a table, <i>What each session adds</i>, with one row per lab. Pick your theme and this week\'s row appears here.</p>';
+      return;
+    }
+    if (slug === "own") {
+      out.innerHTML = '<p class="theme-row">Your own idea has no spec, so start from the brief\'s <b>required feature</b> and say it for your app in <a href="#plan">three lines</a>. Unsure? Join the first huddle.</p>';
+      return;
+    }
+    const specUrl = `${COURSE}/themes/${slug}/SPEC.md`;
+    const specLink = `<a href="${specUrl}">the full spec</a>`;
+    if (!session) { out.innerHTML = `<p class="theme-row">No lab this week. Your plan for every session is in ${specLink}.</p>`; return; }
+    out.innerHTML = '<p class="note">Reading your theme\'s spec…</p>';
+    try {
+      const res = await fetch(SPEC_RAW + slug + "/SPEC.md", { cache: "no-cache" });
+      if (!res.ok) throw new Error(res.status);
+      const cells = rowFor(await res.text(), session);
+      if (!cells) throw new Error("no row");
+      let html = `<span class="feature">Lab ${session} · ${md(cells[1])}</span><p class="theme-row"><b>In your theme:</b> ${md(cells[2])}</p>`;
+      if (cells[3]) html += `<p class="game-row"><b>On the game track (Unity):</b> ${md(cells[3])}</p>`;
+      out.innerHTML = html + `<span class="note">From ${specLink}, row ${parseInt(session, 10)}.</span>`;
+    } catch {
+      out.innerHTML = `<p class="theme-row">Open ${specLink} and find row <b>${parseInt(session, 10)}</b> of the table <i>What each session adds</i>.</p>`;
+    }
+  }
+  select.addEventListener("change", () => { store.set("fcpl-theme", select.value); showTheme(select.value); });
+  const saved = store.get("fcpl-theme");
+  if (saved && THEMES.some(t => t[0] === saved)) { select.value = saved; showTheme(saved); }
+
+  // ---- Taken avatars --------------------------------------------------------------------------
+  const key = s => s.trim().toLowerCase().replace(/\s+/g, " ");
+  function render(taken, source) {
+    const set = new Set(taken.map(key));
+    let n = 0;
+    let html = "<thead><tr><th scope=\"col\"><span class=\"visually-hidden\">Animal</span></th>";
+    for (const [c, hex] of COLOURS) html += `<th scope="col"><span class="chead"><span>${c}</span><i style="background:${hex}"></i></span></th>`;
+    html += "</tr></thead><tbody>";
+    for (const [a, emoji] of ANIMALS) {
+      html += `<tr><th scope="row">${emoji} ${a}</th>`;
+      for (const [c, hex] of COLOURS) {
+        const t = set.has(key(c + " " + a));
+        if (t) n++;
+        html += t
+          ? `<td class="taken" title="${c} ${a}: taken"><span class="cell" aria-label="${c} ${a}, taken">✗</span></td>`
+          : `<td title="${c} ${a}: free"><span class="cell" aria-label="${c} ${a}, free"><i class="dot" style="background:${hex}"></i></span></td>`;
+      }
+      html += "</tr>";
+    }
+    $("avatars").innerHTML = html + "</tbody>";
+    $("taken-count").textContent = `${n} of 180 taken`;
+    $("taken-source").textContent = source;
+  }
+  function parseCsv(text) {
+    return text.replace(/\r/g, "").split("\n")
+      .map(l => l.split(",")[0].replace(/^"|"$/g, "").trim())
+      .filter(l => l && !/^avatar$/i.test(l));
+  }
+  const snapshotNote = `The list as of ${SNAPSHOT_DATE}. Avatars claimed since then may be missing, so the form decides: first come, first served.`;
+  render(SNAPSHOT, snapshotNote);
+  if (TAKEN_CSV_URL) {
+    fetch(TAKEN_CSV_URL, { cache: "no-cache" })
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(t => {
+        const live = parseCsv(t);
+        if (live.length === 0) throw new Error("empty");
+        render(live, "Live list: it updates a few minutes after each claim.");
+      })
+      .catch(() => { /* keep the snapshot */ });
+  }
+})();
+</script>
+</body>
+</html>

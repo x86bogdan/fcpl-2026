@@ -6,6 +6,8 @@ One semester. One project you choose in session 1 and build, one layer per lab, 
 
 | File | What it is |
 |---|---|
+| [The lab routine](https://x86bogdan.github.io/fcpl-2026/routine/) | **How every lab runs**: starting, the huddles, the HELP / VERIFY / LATE lists, joining late, claiming or changing your avatar. Also as a [PDF](routine/FCPL-lab-routine.pdf) |
+| [labs/](labs/README.md) | **Each lab's brief, step by step**, and what *done* means for it |
 | [CONTRACT.md](CONTRACT.md) | How you're graded, the two routes, late work, recovery, AI. **Read this one.** |
 | [themes/](themes/README.md) | The project catalogue: 21 themes to choose from |
 | [placement/](placement/README.md) | The session-1 placement task. Not graded. |
