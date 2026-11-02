@@ -530,12 +530,14 @@ sq test</pre>
 <script>
 (() => {
   // ---- Settings -------------------------------------------------------------------------------
-  // The live list of taken avatars: a Google Sheet tab published to the web as CSV, one avatar per
-  // row ("Sky Owl"). Leave empty to use only the snapshot below.
-  const TAKEN_CSV_URL = "";
+  // The live list of taken avatars, one per row ("Sky Owl"): taken.csv next to the leaderboard, which
+  // `collect.cmd publish` writes from the roster each time the board goes up (same site, so no CORS).
+  // A Google Sheet tab published as CSV works too (work/15-lab-flow.md §5). Empty: the snapshot only.
+  const TAKEN_CSV_URL = "https://x86bogdan.github.io/SharpQuest-2026/taken.csv";
+  const TAKEN_LIVE_NOTE = "As of the last leaderboard update. A claim made since then may be missing, so the form decides: first come, first served.";
   // Used when the live list is empty or can't be read. Snapshot date, then the avatars.
-  const SNAPSHOT_DATE = "16 October";
-  const SNAPSHOT = ["Blue Fox", "Gold Hare", "Gold Hedgehog", "Gold Stag", "Green Bear", "Green Beetle", "Green Falcon", "Green Owl", "Grey Bat", "Grey Boar", "Lime Fox", "Lime Gecko", "Lime Toad", "Lime Turtle", "Navy Penguin", "Orange Fox", "Orange Owl", "Orange Turtle", "Pink Bear", "Pink Fox", "Pink Otter", "Pink Penguin", "Purple Bat", "Purple Falcon", "Purple Fox", "Purple Owl", "Purple Penguin", "Red Bat", "Red Fox", "Red Owl", "Sky Otter", "Sky Owl", "Sky Turtle"];
+  const SNAPSHOT_DATE = "3 November";
+  const SNAPSHOT = ["Blue Fox", "Gold Hare", "Gold Hedgehog", "Gold Stag", "Green Bear", "Green Beetle", "Green Falcon", "Green Owl", "Grey Bat", "Grey Boar", "Grey Hare", "Lime Fox", "Lime Gecko", "Lime Toad", "Lime Turtle", "Navy Penguin", "Orange Fox", "Orange Otter", "Orange Owl", "Orange Turtle", "Pink Bear", "Pink Beetle", "Pink Fox", "Pink Otter", "Pink Penguin", "Purple Bat", "Purple Bear", "Purple Falcon", "Purple Fox", "Purple Owl", "Purple Penguin", "Red Bat", "Red Fox", "Red Owl", "Sky Falcon", "Sky Otter", "Sky Turtle"];
 
   const COURSE = "https://github.com/x86bogdan/fcpl-2026/blob/main";
   const SPEC_RAW = "https://x86bogdan.github.io/fcpl-2026/themes/";
@@ -701,7 +703,7 @@ sq test</pre>
       .then(t => {
         const live = parseCsv(t);
         if (live.length === 0) throw new Error("empty");
-        render(live, "Live list: it updates a few minutes after each claim.");
+        render(live, TAKEN_LIVE_NOTE);
       })
       .catch(() => { /* keep the snapshot */ });
   }
