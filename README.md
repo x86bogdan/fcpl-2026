@@ -4,6 +4,8 @@ This is the lab for the **FCPL** course. It runs as **SharpQuest**, the quest to
 
 One semester. One project you choose in session 1 and build, one layer per lab, until the end.
 
+**Quick links:** [Lab routine](https://x86bogdan.github.io/fcpl-2026/routine/) · [C# phrasebook](https://x86bogdan.github.io/fcpl-2026/cheatsheet/) · [Leaderboard](https://x86bogdan.github.io/SharpQuest-2026/) · [Lab briefs](labs/README.md)
+
 | File | What it is |
 |---|---|
 | [The lab routine](https://x86bogdan.github.io/fcpl-2026/routine/) | **How every lab runs**: starting, the huddles, the HELP / VERIFY / LATE lists, joining late, claiming or changing your avatar. Also as a [PDF](routine/FCPL-lab-routine.pdf) |
