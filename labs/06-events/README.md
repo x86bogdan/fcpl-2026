@@ -39,7 +39,7 @@ You've been passing functions around since Lab 05's stretch (`store.Where(...)`)
 public IReadOnlyList<IItem> Where(IItemStore store, Func<IItem, bool> keep)
 {
     var kept = new List<IItem>();
-    foreach (var item in store)
+    foreach (var item in store.All())   // the contract's IItemStore has All(); it isn't a collection itself
         if (keep(item))          // the caller's rule, not yours
             kept.Add(item);
     return kept;
@@ -90,7 +90,7 @@ Four things the contract checks, and they're the four things people get wrong:
 1. **`event`, not a public `Action` field.** With the keyword, only the class itself can raise it or clear the list; outsiders can only `+=` and `-=`.
 2. **Raised after the change, not before.** A subscriber that reads `Count` must see the new number.
 3. **Nothing announced when `Add` throws.** A rejected duplicate is not an addition.
-4. **`?.Invoke`, because an event with nobody attached is `null`.** This is the crash everyone meets once.
+4. **`?.Invoke`, because an event with nobody attached is `null`.** This is the crash everyone meets once. Here the compiler meets it first: leave out the `?` and the build stops with **CS8602** (*possibly null*), because nullable warnings are errors in this course. Don't silence it with `!`: that turns the build error back into the crash.
 
 Subscribing and unsubscribing:
 
@@ -105,11 +105,12 @@ store.ItemAdded -= Handler;     // remove exactly this one
 
 Write two, doing genuinely different things — a counter and a "recently added" list, say — and prove to yourself that neither one knows about the other, and the store knows about neither.
 
-Then implement `ILab06Wiring` in `src/Capstone.Core/Wiring/`. `Subscribe` is two lines:
+Then implement `ILab06Wiring` in `src/Capstone.Core/Wiring/`. `Subscribe` is three lines. The event is on **your** store class, and the contract's `IItemStore` knows nothing about it, so get your class back first (`YourStore` is its name):
 
 ```csharp
-store.ItemAdded += handler;
-return () => store.ItemAdded -= handler;   // the unsubscribe, as a function
+var mine = (YourStore)store;                 // the store your CreateStore() made
+mine.ItemAdded += handler;
+return () => mine.ItemAdded -= handler;      // the unsubscribe, as a function
 ```
 
 That return value is the whole lab in one line: a function, produced by your code, handed to a caller, holding on to the variables it needs.
