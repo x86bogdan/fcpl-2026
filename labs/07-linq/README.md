@@ -69,7 +69,7 @@ Console.WriteLine(names.Count());                     // now it runs — and cou
 var page = store.OrderBy(i => i.DisplayName).Skip(10).Take(10).ToList();   // a finished list
 ```
 
-**Your first query, `Names(store)`, has to stay lazy.** Query the store itself — the collection you made it in Lab 05 — not the snapshot `All()` hands you, which froze the answer the moment you asked. One test adds an item after calling `Names` and expects to see it.
+**Your first query, `Names(store)`, has to stay lazy.** Query the store itself — the collection you made it in Lab 05 — not the snapshot `All()` hands you, which froze the answer the moment you asked. One test adds an item after calling `Names` and expects to see it. `Names` is handed the contract's `IItemStore`, which isn't a collection (`store.Select` is CS1061), so get your class back first, as `Subscribe` did in Lab 06: `((YourStore)store).Select(i => i.DisplayName)`.
 
 *Your store isn't a collection yet, because you missed or didn't finish Lab 05?* Copy `catchup/Lab05/CatchUpCollection.cs` into `src/Capstone.Core/CatchUp/` and query `store.AsCollection()` instead: it reads your store when the query runs, so `Names` stays lazy. It unblocks this lab; Lab 05 itself still needs your own collection.
 
