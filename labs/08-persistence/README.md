@@ -8,7 +8,7 @@
 
 ---
 
-## 0. Start (5 min)
+## 0. Start
 
 **On a lab PC (browser only, no git):** your repository on GitHub → **Code → Download ZIP** → extract it → open the folder in Rider. Then, in **Rider's terminal** (**Alt+F12**):
 
@@ -29,7 +29,9 @@ Lab 08 shows as *not started*; Labs 02–07 should still be green. **Today more 
 
 **Looking for the syntax?** The [C# phrasebook](https://x86bogdan.github.io/fcpl-2026/cheatsheet/#lab08) has today's C# next to Java and C++, with the errors you're likely to meet.
 
-## 1. The bug this lab is named after (10 min)
+**Finishing early?** The stretch task is at the bottom of this page, worth up to 2 extra points when the lab is on time.
+
+## 1. The bug this lab is named after
 
 Here is one line that looks completely reasonable:
 
@@ -52,7 +54,9 @@ Two different refusals, both of them fair. Your store isn't a list it can fill, 
 
 **The fix isn't a clever serializer setting.** It's to write down what you actually mean: one row per item, with a field for everything the item carries, and something in the row that says which kind it is. You already have that: the DTO and mapper from Lab 02, which Lab 04 taught to tell your kinds apart.
 
-## 2. Save and load (25 min)
+## 2. Save and load
+
+**Where it goes.** Implement `ILab08Wiring` in `src/Capstone.Core/Wiring/`, in a new `Lab08Wiring` class next to last week's. Four of its members you already have: `CreateStore` and `CreateSample` are the ones from your Lab 02 wiring, `KindTypes` and `CreateOfKind` the ones from Lab 04, so each is one line that calls them. `SaveAsync` and `LoadAsync` are today's work. The tests only ever see the wiring; the save and load themselves belong in a class of your own (the reference calls it `PokedexFile`, in `Storage/`), and the wiring's two methods just call it.
 
 ```csharp
 public async Task SaveAsync(IItemStore store, string path)
@@ -74,7 +78,7 @@ public async Task SaveAsync(IItemStore store, string path)
 
 **The contract compares your items property by property**, both ways round the trip, for every kind you declared in Lab 04. A field with no row in your DTO is a field you lose, and the test will tell you which one by name. (Writing this lab, the reference lost `Habitat` on the first run and the owner on the second. The check found both.)
 
-## 3. `await`, for real this time (20 min)
+## 3. `await`, for real this time
 
 You've been using `async` since Lab 02's stretch without anyone explaining it. Here it is.
 
@@ -96,7 +100,7 @@ The contract reads your compiled code for both: your save and load must reach a 
 
 > `await using` on the file stream is doing something too — closing the handle when the block ends, even if the write throws. That's `IDisposable`, and it's why `using` exists. One sentence today; it comes back when it earns more.
 
-## 4. Nothing saved yet, and a file full of nonsense (15 min)
+## 4. Nothing saved yet, and a file full of nonsense
 
 Two failures that look similar in the debugger and are opposites in real life:
 
@@ -109,7 +113,7 @@ Treating the second as the first is how somebody loses a semester's work and doe
 
 A folder that doesn't exist is the first case too — `File.Exists` says false either way, so one check covers both.
 
-## 5. Push (5 min)
+## 5. Push
 
 ```
 sq test
@@ -126,7 +130,7 @@ See `ACCEPTANCE.md`. In short: Lab 08 at full marks, Labs 02–07 still green, C
 
 ## Missed session 7 — or this one?
 
-`catchup/` in your repository has a **catch-up kit** for the labs that later labs lean on. Copy its files into `src/Capstone.Core/CatchUp/` and carry on. It earns you nothing for the lab it belongs to — the contract tests know the namespace and say so by name, and a wiring class of your own that hands back the kit's objects is reported too. To get those points, write your own and be verified in S13 or S14.
+`catchup/` in your repository has a **catch-up kit** for the labs that later labs lean on. Copy its files into `src/Capstone.Core/CatchUp/` and carry on. It earns you nothing for the lab it belongs to — the contract tests know the namespace and say so by name, and a wiring class of your own that hands back the kit's objects is reported too. To get those points, write your own, stop using the kit, and ask to be verified at the start of a later lab: it counts as late work, worth up to 8.
 
 ## Stretch
 

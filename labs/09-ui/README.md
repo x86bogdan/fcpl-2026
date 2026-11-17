@@ -8,7 +8,7 @@
 
 ---
 
-## 0. Start (5 min)
+## 0. Start
 
 **On a lab PC (browser only, no git):** your repository on GitHub → **Code → Download ZIP** → extract it → open the folder in Rider. Then, in **Rider's terminal** (**Alt+F12**):
 
@@ -31,7 +31,9 @@ Lab 09 shows as *not started*; Labs 02–08 should still be green.
 
 **Looking for the syntax?** The [C# phrasebook](https://x86bogdan.github.io/fcpl-2026/cheatsheet/#lab09) has today's C# next to Java and C++, with the errors you're likely to meet.
 
-## 1. Why the tests can't see your window (10 min)
+**Finishing early?** The stretch task is at the bottom of this page, worth up to 2 extra points when the lab is on time.
+
+## 1. Why the tests can't see your window
 
 They can't, and they never will. The checks that grade you run on a build server in the cloud, on Linux, with no screen — a WPF project can't even be *built* there. So if "a working window" were the graded thing, there would be nothing to grade.
 
@@ -50,7 +52,9 @@ So today splits cleanly:
 
 **Either framework is fine.** WPF if you're on Windows with Visual Studio, Avalonia anywhere. The XAML differs by one namespace line. Nothing in `Capstone.Core` changes either way — and the tests check that too: your domain library must not reference a UI framework at all.
 
-## 2. The list that updates itself (20 min)
+## 2. The list that updates itself
+
+**Where it goes.** The view model is a class of your own in `src/Capstone.Core/ViewModels/` that implements the contract's `ICatalogueViewModel`. The tests reach it through `ILab09Wiring`, which you implement in `src/Capstone.Core/Wiring/` in a new `Lab09Wiring` class: `CreateStore` and `CreateSample` are the ones from your Lab 02 wiring, and `CreateViewModel(store)` is one line, `new CatalogueViewModel(store)` with your class's name.
 
 ```csharp
 public sealed class CatalogueViewModel : ICatalogueViewModel
@@ -76,7 +80,7 @@ Three rules, and each is a check:
 
 The subscription is Lab 06's event finally earning its keep: the store announces, the view model adds, the window redraws. Nobody calls "refresh".
 
-## 3. Telling the window (15 min)
+## 3. Telling the window
 
 `INotifyPropertyChanged` is one event, and binding is the window listening to it. A property that changes quietly is a label that never updates.
 
@@ -100,7 +104,7 @@ Two things people miss, both checked:
 - **A property computed from another one has to be announced too.** `Details` changes when `Selected` changes, so setting `Selected` announces both.
 - **Setting a property to the value it already has should announce nothing.** In a real window this is the difference between redrawing when something changed and redrawing on every keystroke.
 
-## 4. Buttons that grey themselves out (15 min)
+## 4. Buttons that grey themselves out
 
 A command is two questions the window keeps asking — *can I?* and, when clicked, *do it* — plus an event telling the button to ask again. Ten lines:
 
@@ -120,7 +124,7 @@ public sealed class RelayCommand(Action<object?> run, Func<object?, bool>? can =
 - When the selection changes, **raise `CanExecuteChanged`** — the button only re-asks when it is told to, and without this it stays greyed out with a row selected. It is the single most common bug in this lab.
 - Expose the commands as properties set **once**, in the constructor. A property that news up a command on every read hands the button an object nobody will ever raise an event on.
 
-## 5. The window (20 min)
+## 5. The window
 
 Now the easy part. A search box, a list, a details panel, a Delete button, a count. Every attribute names something on the view model:
 
@@ -137,7 +141,7 @@ Set `DataContext` once, where the window is created. The reference does it in `A
 
 > **Getting started:** WPF — *New Project → WPF Application*, or `dotnet new wpf`. Avalonia — `dotnet new install Avalonia.Templates` then `dotnet new avalonia.app`. On a laptop with the .NET 10 SDK, add `-f net9.0` to `dotnet new` (or change `net10.0` to `net9.0` in the new project file afterwards; for WPF it's `net9.0-windows`): the lab PCs have .NET 9. Put the versions you install in `Directory.Packages.local.props`; that file is yours and `sq update` never touches it. The reference has a working copy of both the project file and the XAML.
 
-## 6. Push (5 min)
+## 6. Push
 
 ```
 sq test
